@@ -9,8 +9,6 @@ from crossover import uniform_crossover
 from mutation import inversion_mutation
 
 # Data barang: (nama, keuntungan, ukuran)
-# Sesuai tugas Pertemuan 10
-# ============================================================
 barang = [
     ("Barang1", 10, 5),
     ("Barang2", 40, 4),
@@ -19,13 +17,7 @@ barang = [
     ("Barang5", 35, 7),
 ]
 
-# ============================================================
-# Metode berdasarkan NIM berakhiran 22:
-#   Digit pertama = 2 -> Seleksi : RWS (Roulette Wheel Selection)
-#   Digit kedua   = 2 -> Crossover: Uniform Crossover
-#   2 + 2 = 4         -> Mutasi  : Inversion Mutation
-# ============================================================
-
+# Metode berdasarkan NIM
 def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasitas_gudang):
     # Menentukan jumlah gen berdasarkan jumlah barang
     jumlah_gen = len(barang)
@@ -68,7 +60,7 @@ def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasi
 
         # Membentuk populasi baru
         while len(new_populasi) < jumlah_populasi:
-            # --- SELEKSI: Roulette Wheel Selection ---
+            # Roulette Wheel Selection
             parent1, idx1 = roulette_wheel_selection(populasi, fitness_populasi)
             used_indices.append(idx1)
 
@@ -84,13 +76,13 @@ def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasi
             )
             used_indices.append(available_indices[rel_idx])
 
-            # --- CROSSOVER: Uniform Crossover ---
+            # Uniform Crossover
             if random.random() < prob_crossover:
                 anak1, anak2 = uniform_crossover(parent1, parent2)
             else:
                 anak1, anak2 = parent1[:], parent2[:]
 
-            # --- MUTASI: Inversion Mutation ---
+            # Inversion Mutation
             if random.random() < prob_mutasi:
                 anak1 = inversion_mutation(anak1)
             if random.random() < prob_mutasi:
@@ -101,9 +93,7 @@ def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasi
         # Potong populasi baru sesuai ukuran
         populasi = new_populasi[:jumlah_populasi]
 
-    # ============================================================
     # Tampilkan grafik perkembangan fitness
-    # ============================================================
     plt.figure(figsize=(12, 7))
 
     # Scatter semua nilai fitness tiap generasi (transparan)
@@ -125,9 +115,7 @@ def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasi
     plt.tight_layout()
     plt.show()
 
-    # ============================================================
     # Tampilkan hasil solusi terbaik
-    # ============================================================
     selected_items  = [barang[i][0] for i in range(len(best_individu)) if best_individu[i] == 1]
     selected_profit = hitung_fitness(best_individu, barang, kapasitas_gudang)
     selected_size   = sum(barang[i][2] for i in range(len(best_individu)) if best_individu[i] == 1)
@@ -147,10 +135,6 @@ def run_ga(jumlah_generasi, jumlah_populasi, prob_crossover, prob_mutasi, kapasi
         print(f"  - {item} (Keuntungan: {barang[idx][1]}, Ukuran: {barang[idx][2]})")
     print("=" * 45)
 
-
-# ============================================================
-# Jalankan GA
-# ============================================================
 run_ga(
     jumlah_generasi=50,
     jumlah_populasi=20,
